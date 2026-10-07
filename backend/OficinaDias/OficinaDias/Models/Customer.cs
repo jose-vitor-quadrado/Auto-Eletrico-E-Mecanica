@@ -7,4 +7,6 @@ public class Customer
     public string Phone { get; set; } = string.Empty;
     public string Neighborhood { get; set; } = string.Empty;
     public string Street { get; set; } = string.Empty;
+    public List<Vehicle> Vehicles { get; set; } = [];
+    public List<ServiceOrder> ServiceOrders { get; set; } = [];
 }
