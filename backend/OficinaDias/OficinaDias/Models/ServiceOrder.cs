@@ -10,7 +10,7 @@ public class ServiceOrder
     public DateTime? CloseDate { get; set; }
     public string Description { get; set; } = string.Empty;
     public bool WasPaid { get; set; }
-    public List<ServiceOrderItem> Items { get; set; } = new();
+    public List<ServiceOrderItem> Items { get; set; } = [];
 
     public decimal Total =>
         Items.Sum(x => x.Quantity * x.UnitPrice);
