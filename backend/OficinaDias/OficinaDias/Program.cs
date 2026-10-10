@@ -2,6 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+// Builder Extensions
+builder.AddData();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -10,5 +13,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Endpoint Extensions
+app.MapEndpoints();
 
 app.Run();
