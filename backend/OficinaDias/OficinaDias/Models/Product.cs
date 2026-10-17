@@ -7,4 +7,15 @@ public class Product
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public int StockQuantity { get; set; }
+
+    public void DecreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new ArgumentException("Quantidade inválida.");
+
+        if (StockQuantity < quantity)
+            throw new InvalidOperationException("Estoque insuficiente.");
+
+        StockQuantity -= quantity;
+    }
 }
