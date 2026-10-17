@@ -9,6 +9,8 @@ public class ServiceOrderItem
     public decimal UnitPrice { get; set; }
     public int? ProductId { get; set; }
     public Product? Product { get; set; }
+    public int? ServiceId { get; set; }
+    public Service? Service { get; set; }
 
     public decimal Total => Quantity * UnitPrice;
 }
