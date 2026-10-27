@@ -8,4 +8,20 @@ public class OficinaDbContext : DbContext
     public OficinaDbContext(DbContextOptions<OficinaDbContext> options) : base(options)
     {
     }
+
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Service> Services { get; set; }
+    public DbSet<ServiceOrder> ServiceOrders { get; set; }
+    public DbSet<ServiceOrderItem> ServiceOrderItems { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Vehicle>()
+            .HasIndex(v => v.LicensePlate)
+            .IsUnique();
+    }
 }
