@@ -8,4 +8,6 @@ public class Vehicle
     public string Model { get; set; } = string.Empty;
     public string Color { get; set; } = string.Empty;
     public string Mileage { get; set; } = string.Empty;
+    public int CustomerId { get; set; }
+    public Customer Customer { get; set; } = null!;
 }
