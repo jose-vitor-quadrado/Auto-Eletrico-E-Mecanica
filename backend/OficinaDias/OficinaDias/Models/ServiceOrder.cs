@@ -6,7 +6,7 @@ public class ServiceOrder
     public int CustomerId { get; set; }
     public Customer Customer { get; set; } = null!;
     public int VehicleId { get; set; }
-    public Vehicle Vehicle { get; set; } = new();
+    public Vehicle Vehicle { get; set; } = null!;
     public DateTime OpenDate { get; set; } = DateTime.Now;
     public DateTime? CloseDate { get; set; }
     public string Description { get; set; } = string.Empty;
