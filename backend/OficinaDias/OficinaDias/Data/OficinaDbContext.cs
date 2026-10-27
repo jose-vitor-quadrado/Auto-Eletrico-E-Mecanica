@@ -18,10 +18,9 @@ public class OficinaDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(OficinaDbContext).Assembly);
 
-        modelBuilder.Entity<Vehicle>()
-            .HasIndex(v => v.LicensePlate)
-            .IsUnique();
+        base.OnModelCreating(modelBuilder);
     }
 }
