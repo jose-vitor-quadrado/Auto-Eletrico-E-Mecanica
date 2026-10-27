@@ -8,6 +8,14 @@ public class Product
     public decimal Price { get; set; }
     public int StockQuantity { get; set; }
 
+    public void IncreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new ArgumentException("Quantitdade inválida.");
+
+        StockQuantity += quantity;
+    }
+
     public void DecreaseStock(int quantity)
     {
         if (quantity <= 0)
