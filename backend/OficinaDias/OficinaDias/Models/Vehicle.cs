@@ -7,7 +7,7 @@ public class Vehicle
     public string Brand { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
     public string Color { get; set; } = string.Empty;
-    public int Mileage { get; set; }
+    public int MileageInKm { get; set; }
     public int CustomerId { get; set; }
     public Customer Customer { get; set; } = null!;
     public List<ServiceOrder> ServiceOrders { get; set; } = [];

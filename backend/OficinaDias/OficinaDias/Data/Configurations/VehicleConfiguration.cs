@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OficinaDias.Models;
 
-namespace OficinaDias.Configurations;
+namespace OficinaDias.Data.Configurations;
 
 public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 {
@@ -29,7 +29,7 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(v => v.Mileage)
+        builder.Property(v => v.MileageInKm)
             .IsRequired();
 
         builder.HasOne(v => v.Customer)

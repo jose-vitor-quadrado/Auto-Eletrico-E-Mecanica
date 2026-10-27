@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OficinaDias.Models;
 
-namespace OficinaDias.Configurations;
+namespace OficinaDias.Data.Configurations;
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer> 
 {
