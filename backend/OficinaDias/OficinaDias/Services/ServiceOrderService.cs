@@ -114,4 +114,29 @@ public class ServiceOrderService
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task CancelAsync(int serviceOrderId)
+    {
+        var order = await _context.ServiceOrders
+            .FirstOrDefaultAsync(x => x.Id == serviceOrderId);
+
+        if (order is null)
+            throw new Exception(
+                "Ordem de serviço não encontrada.");
+
+        foreach(var item in order.Items)
+        {
+            if (item.ProductId.HasValue)
+            {
+                var product = await _context.Products
+                    .FirstAsync(p => p.Id == item.ProductId);
+
+                product.IncreaseStock(item.Quantity);
+            }
+        }
+
+        _context.ServiceOrders.Remove(order);
+
+        await _context.SaveChangesAsync();
+    }
 }
