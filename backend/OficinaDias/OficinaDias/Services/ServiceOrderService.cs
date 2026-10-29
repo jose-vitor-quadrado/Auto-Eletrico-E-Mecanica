@@ -86,4 +86,18 @@ public class ServiceOrderService
 
         return serviceOrder;
     }
+
+    public async Task MarkAsPaidAsync(int serviceOrderId)
+    {
+        var order = await _context.ServiceOrders
+            .FirstOrDefaultAsync(x => x.Id == serviceOrderId);
+
+        if (order is null)
+            throw new Exception(
+                "Ordem de serviço não encontrada.");
+
+        order.WasPaid = true;
+
+        await _context.SaveChangesAsync();
+    }
 }
