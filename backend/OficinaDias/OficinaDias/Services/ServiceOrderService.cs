@@ -100,4 +100,18 @@ public class ServiceOrderService
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task CloseAsync(int serviceOrderId)
+    {
+        var order = await _context.ServiceOrders
+            .FirstOrDefaultAsync(x => x.Id == serviceOrderId);
+
+        if (order is null)
+            throw new Exception(
+                "Ordem de serviço não encontrada.");
+
+        order.CloseDate = DateTime.Now;
+
+        await _context.SaveChangesAsync();
+    }
 }
