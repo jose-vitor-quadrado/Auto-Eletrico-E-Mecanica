@@ -64,6 +64,8 @@ public class ServiceOrderService
 
     public async Task<ServiceOrder> CreateAsync(ServiceOrder serviceOrder)
     {
+        serviceOrder.OpenDate = DateTime.Now;
+
         await ValidateAsync(serviceOrder);
 
         foreach (var item in serviceOrder.Items)
