@@ -61,4 +61,29 @@ public class ServiceOrderService
             }
         }
     }
+
+    public async Task<ServiceOrder> CreateAsync(ServiceOrder serviceOrder)
+    {
+        await ValidateAsync(serviceOrder);
+
+        foreach (var item in serviceOrder.Items)
+        {
+            if (item.ProductId is not null)
+            {
+                var product = await _context.Products
+                    .FindAsync(item.ProductId);
+
+                if (product is null)
+                    throw new Exception("Produto não encontrado.");
+
+                product.DecreaseStock(item.Quantity);
+            }
+        }
+
+        _context.ServiceOrders.Add(serviceOrder);
+
+        await _context.SaveChangesAsync();
+
+        return serviceOrder;
+    }
 }
