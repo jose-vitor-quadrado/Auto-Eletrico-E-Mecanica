@@ -3,7 +3,7 @@
 public class ServiceOrder
 {
     public int Id { get; set; }
-    public DateTime OpenDate { get; set; } = DateTime.Now;
+    public DateTime OpenDate { get; set; }
     public DateTime? CloseDate { get; set; }
     public string Description { get; set; } = string.Empty;
     public bool WasPaid { get; set; }
