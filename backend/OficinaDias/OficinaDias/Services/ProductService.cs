@@ -24,11 +24,21 @@ public class ProductService
         return product;
     }
 
-    public async Task<Product> UpdateAsync(Product product)
+    public async Task<Product> UpdateAsync(int id, Product updatedProduct)
     {
-        ValidateProduct(product);
+        var product = await _context.Products
+            .FirstOrDefaultAsync(p => p.Id == id);
 
-        _context.Products.Update(product);
+        if (product is null)
+            throw new Exception(
+                "Produto não encontrado.");
+
+        ValidateProduct(updatedProduct);
+
+        product.Name = updatedProduct.Name;
+        product.Description = updatedProduct.Description;
+        product.Price = updatedProduct.Price;
+        product.StockQuantity = updatedProduct.StockQuantity;
 
         await _context.SaveChangesAsync();
 
