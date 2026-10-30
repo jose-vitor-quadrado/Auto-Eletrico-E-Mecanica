@@ -13,21 +13,6 @@ public class ProductService
         _context = context;
     }
 
-    public async void ValidateProduct(Product product)
-    {
-        if (string.IsNullOrWhiteSpace(product.Name))
-            throw new Exception(
-                "Nome é obrigatório.");
-
-        if (product.Price <= 0)
-            throw new Exception(
-                "Preço deve ser maior que zero.");
-
-        if (product.StockQuantity < 0)
-            throw new Exception(
-                "Estoque inválido.");
-    }
-
     public async Task<Product> CreateAsync(Product product)
     {
         ValidateProduct(product);
@@ -96,5 +81,20 @@ public class ProductService
         await _context.SaveChangesAsync();
 
         return product;
+    }
+
+    private async void ValidateProduct(Product product)
+    {
+        if (string.IsNullOrWhiteSpace(product.Name))
+            throw new Exception(
+                "Nome é obrigatório.");
+
+        if (product.Price <= 0)
+            throw new Exception(
+                "Preço deve ser maior que zero.");
+
+        if (product.StockQuantity < 0)
+            throw new Exception(
+                "Estoque inválido.");
     }
 }
