@@ -12,6 +12,17 @@ public class ServiceService
         _context = context;
     }
 
+    public async Task<Service> CreateAsync(Service service)
+    {
+        ValidateService(service);
+
+        _context.Services.Add(service);
+
+        await _context.SaveChangesAsync();
+
+        return service;
+    }
+
     private async void ValidateService(Service service)
     {
         if (string.IsNullOrWhiteSpace(service.Description))
