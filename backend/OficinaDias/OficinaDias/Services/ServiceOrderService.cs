@@ -132,6 +132,46 @@ public class ServiceOrderService
         return item;
     }
 
+    public async Task RemoveItemAsync(
+        int serviceOrderId,
+        int itemId)
+    {
+        var item = await _context.ServiceOrderItems
+            .FirstOrDefaultAsync(i =>
+            i.Id == itemId &&
+            i.ServiceOrderId == serviceOrderId);
+
+        if (item is null)
+            throw new Exception(
+                "Item não encontrado.");
+
+        var order = await _context.ServiceOrders
+            .FirstOrDefaultAsync(so => so.Id == serviceOrderId);
+
+        if (order is null)
+            throw new Exception(
+                "Ordem de serviço não encontrada.");
+
+        if (order.CloseDate is not null)
+            throw new Exception(
+                "Não é possível adicionar itens em uma ordem encerrada.");
+
+        if (item.ProductId.HasValue)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product is not null)
+            {
+                product.IncreaseStock(item.Quantity);
+            }
+        }
+
+        _context.ServiceOrderItems.Remove(item);
+
+        await _context.SaveChangesAsync();
+    }
+
     private async Task ValidateAsync(ServiceOrder order)
     {
         if (order.Items.Count == 0)
