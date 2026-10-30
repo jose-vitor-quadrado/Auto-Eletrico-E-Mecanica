@@ -93,6 +93,23 @@ public class ServiceOrderService
         await _context.SaveChangesAsync();
     }
 
+    //public async Task<ServiceOrder> AddItemAsync(
+    //    int serviceOrderId,
+    //    ServiceOrderItem item)
+    //{
+    //    var order = await _context.ServiceOrders
+    //        .Include(so => so.Items)
+    //        .FirstOrDefaultAsync(so => so.Id == serviceOrderId);
+
+    //    if (order is null)
+    //        throw new Exception(
+    //            "Ordem de serviço não encontrada.");
+
+    //    if (order.CloseDate is not null)
+    //        throw new Exception(
+    //            "Não é possível adicionar itens em uma ordem encerrada.");
+    //}
+
     private async Task ValidateAsync(ServiceOrder order)
     {
         if (order.Items.Count == 0)
@@ -101,44 +118,49 @@ public class ServiceOrderService
 
         foreach (var item in order.Items)
         {
-            var hasProduct = item.ProductId.HasValue;
-            var hasService = item.ServiceId.HasValue;
+            await ValidateItemAsync(item);
+        }
+    }
 
-            if (!hasProduct && !hasService)
-                throw new Exception(
-                    "O item deve possuir um produto ou serviço.");
+    private async Task ValidateItemAsync(ServiceOrderItem item)
+    {
+        var hasProduct = item.ProductId.HasValue;
+        var hasService = item.ServiceId.HasValue;
 
-            if (hasProduct && hasService)
-                throw new Exception(
-                    "O item não deve possuir produto e serviço ao mesmo tempo.");
+        if (!hasProduct && !hasService)
+            throw new Exception(
+                "O item deve possuir um produto ou serviço.");
 
-            if (item.Quantity <= 0)
-                throw new Exception(
-                    "A quantidade deve ser maior que zero.");
+        if (hasProduct && hasService)
+            throw new Exception(
+                "O item não deve possuir produto e serviço ao mesmo tempo.");
 
-            if (item.UnitPrice <= 0)
-                throw new Exception(
-                    "O valor não pode ser negativo.");
+        if (item.Quantity <= 0)
+            throw new Exception(
+                "A quantidade deve ser maior que zero.");
 
-            if (hasProduct)
-            {
-                var product = await _context.Products
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+        if (item.UnitPrice <= 0)
+            throw new Exception(
+                "O valor não pode ser negativo.");
 
-                if (product is null)
-                    throw new Exception("Produto não encontrado.");
-            }
+        if (hasProduct)
+        {
+            var product = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
 
-            if (hasService)
-            {
-                var service = await _context.Services
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.Id == item.ServiceId);
+            if (product is null)
+                throw new Exception("Produto não encontrado.");
+        }
 
-                if (service is null)
-                    throw new Exception("Serviço não encontrado.");
-            }
+        if (hasService)
+        {
+            var service = await _context.Services
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Id == item.ServiceId);
+
+            if (service is null)
+                throw new Exception("Serviço não encontrado.");
         }
     }
 }
