@@ -38,4 +38,15 @@ public class ProductService
 
         return product;
     }
+
+    public async Task<Product> UpdateAsync(Product product)
+    {
+        ValidateProduct(product);
+
+        _context.Products.Update(product);
+
+        await _context.SaveChangesAsync();
+
+        return product;
+    }
 }
