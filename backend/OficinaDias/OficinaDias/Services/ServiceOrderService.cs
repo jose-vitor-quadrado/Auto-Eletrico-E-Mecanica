@@ -93,7 +93,7 @@ public class ServiceOrderService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ServiceOrderItem> AddItemAsync(
+    public async Task<ServiceOrder> AddItemAsync(
         int serviceOrderId,
         ServiceOrderItem item)
     {
@@ -120,16 +120,32 @@ public class ServiceOrderService
                 throw new Exception(
                     "Produto não encontrado.");
 
+            item.ItemDescription = product.Name;
+            item.UnitPrice = product.Price;
+
             product.DecreaseStock(item.Quantity);
+        }
+
+        if (item.ServiceId.HasValue)
+        {
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.Id == item.ServiceId);
+
+            if (service is null)
+                throw new Exception(
+                    "Serviço não encontrado.");
+
+            item.ItemDescription = service.Description;
+            item.UnitPrice = service.SuggestedPrice;
         }
 
         item.ServiceOrderId = serviceOrderId;
 
-        order.Items.Add(item);
+        _context.ServiceOrderItems.Add(item);
 
         await _context.SaveChangesAsync();
 
-        return item;
+        return order;
     }
 
     public async Task RemoveItemAsync(
