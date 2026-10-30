@@ -93,22 +93,44 @@ public class ServiceOrderService
         await _context.SaveChangesAsync();
     }
 
-    //public async Task<ServiceOrder> AddItemAsync(
-    //    int serviceOrderId,
-    //    ServiceOrderItem item)
-    //{
-    //    var order = await _context.ServiceOrders
-    //        .Include(so => so.Items)
-    //        .FirstOrDefaultAsync(so => so.Id == serviceOrderId);
+    public async Task<ServiceOrderItem> AddItemAsync(
+        int serviceOrderId,
+        ServiceOrderItem item)
+    {
+        var order = await _context.ServiceOrders
+            .Include(so => so.Items)
+            .FirstOrDefaultAsync(so => so.Id == serviceOrderId);
 
-    //    if (order is null)
-    //        throw new Exception(
-    //            "Ordem de serviço não encontrada.");
+        if (order is null)
+            throw new Exception(
+                "Ordem de serviço não encontrada.");
 
-    //    if (order.CloseDate is not null)
-    //        throw new Exception(
-    //            "Não é possível adicionar itens em uma ordem encerrada.");
-    //}
+        if (order.CloseDate is not null)
+            throw new Exception(
+                "Não é possível adicionar itens em uma ordem encerrada.");
+
+        await ValidateItemAsync(item);
+
+        if (item.ProductId.HasValue)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product is null)
+                throw new Exception(
+                    "Produto não encontrado.");
+
+            product.DecreaseStock(item.Quantity);
+        }
+
+        item.ServiceOrderId = serviceOrderId;
+
+        order.Items.Add(item);
+
+        await _context.SaveChangesAsync();
+
+        return item;
+    }
 
     private async Task ValidateAsync(ServiceOrder order)
     {
