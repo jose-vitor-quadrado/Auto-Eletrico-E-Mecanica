@@ -65,4 +65,20 @@ public class ProductService
 
         return product;
     }
+
+    public async Task<Product> IncreaseStockAsync(int productId, int quantity)
+    {
+        var product = await _context.Products
+            .FirstOrDefaultAsync(p => p.Id == productId);
+
+        if (product is null)
+            throw new Exception(
+                "Produto não encontrado.");
+
+        product.IncreaseStock(quantity);
+
+        await _context.SaveChangesAsync();
+
+        return product;
+    }
 }
