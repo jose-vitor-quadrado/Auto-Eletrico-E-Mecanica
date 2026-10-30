@@ -1,4 +1,5 @@
-﻿using OficinaDias.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OficinaDias.Data;
 using OficinaDias.Models;
 
 namespace OficinaDias.Services;
@@ -17,6 +18,25 @@ public class ServiceService
         ValidateService(service);
 
         _context.Services.Add(service);
+
+        await _context.SaveChangesAsync();
+
+        return service;
+    }
+
+    public async Task<Service> UpdateAsync(int id, Service updatedService)
+    {
+        var service = await _context.Services
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (service is null)
+            throw new Exception(
+                "Serviço não encontrado.");
+
+        ValidateService(updatedService);
+
+        service.Description = updatedService.Description;
+        service.SuggestedPrice = updatedService.SuggestedPrice;
 
         await _context.SaveChangesAsync();
 
