@@ -152,15 +152,6 @@ public class ServiceOrderService
         int serviceOrderId,
         int itemId)
     {
-        var item = await _context.ServiceOrderItems
-            .FirstOrDefaultAsync(i =>
-            i.Id == itemId &&
-            i.ServiceOrderId == serviceOrderId);
-
-        if (item is null)
-            throw new Exception(
-                "Item não encontrado.");
-
         var order = await _context.ServiceOrders
             .FirstOrDefaultAsync(so => so.Id == serviceOrderId);
 
@@ -171,6 +162,15 @@ public class ServiceOrderService
         if (order.CloseDate is not null)
             throw new Exception(
                 "Não é possível adicionar itens em uma ordem encerrada.");
+
+        var item = await _context.ServiceOrderItems
+            .FirstOrDefaultAsync(i =>
+            i.Id == itemId &&
+            i.ServiceOrderId == serviceOrderId);
+
+        if (item is null)
+            throw new Exception(
+                "Item não encontrado.");
 
         if (item.ProductId.HasValue)
         {
