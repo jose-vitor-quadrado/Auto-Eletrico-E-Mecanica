@@ -217,28 +217,24 @@ public class ServiceOrderService
             throw new Exception(
                 "A quantidade deve ser maior que zero.");
 
-        if (item.UnitPrice <= 0)
-            throw new Exception(
-                "O valor não pode ser negativo.");
-
         if (hasProduct)
         {
-            var product = await _context.Products
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+            var productExists = await _context.Products
+                .AnyAsync(p => p.Id == item.ProductId);
 
-            if (product is null)
-                throw new Exception("Produto não encontrado.");
+            if (!productExists)
+                throw new Exception(
+                    "Produto não encontrado.");
         }
 
         if (hasService)
         {
-            var service = await _context.Services
-                .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.Id == item.ServiceId);
+            var serviceExists = await _context.Services
+                .AnyAsync(s => s.Id == item.ServiceId);
 
-            if (service is null)
-                throw new Exception("Serviço não encontrado.");
+            if (!serviceExists)
+                throw new Exception(
+                    "Serviço não encontrado.");
         }
     }
 }
