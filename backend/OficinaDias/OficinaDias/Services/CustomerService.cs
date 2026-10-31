@@ -47,6 +47,22 @@ public class CustomerService
         return customer;
     }
 
+    public async Task<Customer> DeleteAsync(int id)
+    {
+        var customer = await _context.Customers
+            .FindAsync(id);
+
+        if (customer is null)
+            throw new Exception(
+                "Cliente não encontrado.");
+
+        _context.Customers.Remove(customer);
+
+        await _context.SaveChangesAsync();
+
+        return customer;
+    }
+
     private static void ValidateCustomer(Customer customer)
     {
         if (string.IsNullOrWhiteSpace(customer.Name))
