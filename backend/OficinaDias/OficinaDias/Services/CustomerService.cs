@@ -24,6 +24,29 @@ public class CustomerService
         return customer;
     }
 
+    public async Task<Customer> UpdateAsync(
+        int id, 
+        Customer updatedCustomer)
+    {
+        var customer = await _context.Customers
+            .FindAsync(id);
+
+        if (customer is null)
+            throw new Exception(
+                "Cliente não encontrado.");
+
+        ValidateCustomer(updatedCustomer);
+
+        customer.Name = updatedCustomer.Name;
+        customer.Phone = updatedCustomer.Phone;
+        customer.Neighborhood = updatedCustomer.Neighborhood;
+        customer.Street = updatedCustomer.Street;
+
+        await _context.SaveChangesAsync();
+
+        return customer;
+    }
+
     private static void ValidateCustomer(Customer customer)
     {
         if (string.IsNullOrWhiteSpace(customer.Name))
