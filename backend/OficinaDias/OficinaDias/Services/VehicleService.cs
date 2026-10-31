@@ -13,6 +13,17 @@ public class VehicleService
         _context = context;
     }
 
+    public async Task<Vehicle> CreateAsync(Vehicle vehicle)
+    {
+        await ValidateVehicleAsync(vehicle);
+
+        _context.Vehicles.Add(vehicle);
+
+        await _context.SaveChangesAsync();
+
+        return vehicle;
+    }
+
     private async Task ValidateVehicleAsync(
         Vehicle vehicle,
         int? updatingVehicleId = null)
