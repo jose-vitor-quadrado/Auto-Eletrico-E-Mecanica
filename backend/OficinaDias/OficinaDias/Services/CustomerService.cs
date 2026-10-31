@@ -50,11 +50,21 @@ public class CustomerService
     public async Task<Customer> DeleteAsync(int id)
     {
         var customer = await _context.Customers
-            .FindAsync(id);
+            .Include(c => c.Vehicles)
+            .Include(c => c.ServiceOrders)
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (customer is null)
             throw new Exception(
                 "Cliente não encontrado.");
+
+        if (customer.Vehicles.Any())
+            throw new Exception(
+                "Não é possível excluir um cliente que possui veículos.");
+
+        if (customer.ServiceOrders.Any())
+            throw new Exception(
+                "Não é possível excluir um cliente que possui ordens de serviço.");
 
         _context.Customers.Remove(customer);
 
