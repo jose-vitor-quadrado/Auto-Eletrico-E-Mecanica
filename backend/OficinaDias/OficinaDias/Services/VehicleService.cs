@@ -24,6 +24,30 @@ public class VehicleService
         return vehicle;
     }
 
+    public async Task<Vehicle> UpdateAsync(
+        int id,
+        Vehicle updatedVehicle)
+    {
+        var vehicle = await _context.Vehicles
+            .FindAsync(id);
+
+        if (vehicle is null)
+            throw new Exception(
+                "Veículo não encontrado.");
+
+        await ValidateVehicleAsync(updatedVehicle);
+
+        vehicle.Brand = updatedVehicle.Brand;
+        vehicle.Model = updatedVehicle.Model; 
+        vehicle.Color = updatedVehicle.Color;
+        vehicle.MileageInKm = updatedVehicle.MileageInKm; 
+        vehicle.LicensePlate = updatedVehicle.LicensePlate;
+
+        await _context.SaveChangesAsync();
+
+        return vehicle;
+    }
+
     private async Task ValidateVehicleAsync(
         Vehicle vehicle,
         int? updatingVehicleId = null)
