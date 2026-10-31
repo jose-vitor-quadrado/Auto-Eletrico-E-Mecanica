@@ -12,4 +12,38 @@ public class VehicleService
     {
         _context = context;
     }
+
+    private async Task ValidateVehicleAsync(
+        Vehicle vehicle,
+        int? updatingVehicleId = null)
+    {
+        if (string.IsNullOrWhiteSpace(vehicle.LicensePlate))
+            throw new Exception(
+                "Placa obrigatória.");
+
+        bool plateExists = await _context.Vehicles
+            .AnyAsync(v =>
+            v.LicensePlate == vehicle.LicensePlate &&
+            v.Id != updatingVehicleId);
+
+        if (plateExists)
+            throw new Exception(
+                "Já existe um veículo com esta placa.");
+
+        if (string.IsNullOrWhiteSpace(vehicle.Brand))
+            throw new Exception(
+                "Marca do veículo é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(vehicle.Model))
+            throw new Exception(
+                "Modelo do veículo é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(vehicle.Color))
+            throw new Exception(
+                "Cor do veículo é obrigatória.");
+
+        if (vehicle.MileageInKm < 0)
+            throw new Exception(
+                "Quilometragem inválida");
+    }
 }
