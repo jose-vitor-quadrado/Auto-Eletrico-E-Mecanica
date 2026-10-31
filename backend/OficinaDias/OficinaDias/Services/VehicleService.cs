@@ -48,6 +48,22 @@ public class VehicleService
         return vehicle;
     }
 
+    public async Task<Vehicle> DeleteAsync(int id)
+    {
+        var vehicle = await _context.Vehicles
+            .FindAsync(id);
+
+        if (vehicle is null)
+            throw new Exception(
+                "Veículo não encontrado.");
+
+        _context.Vehicles.Remove(vehicle);
+
+        await _context.SaveChangesAsync();
+
+        return vehicle;
+    }
+
     private async Task ValidateVehicleAsync(
         Vehicle vehicle,
         int? updatingVehicleId = null)
