@@ -13,6 +13,17 @@ public class CustomerService
         _context = context;
     }
 
+    public async Task<Customer> CreateAsync(Customer customer)
+    {
+        ValidateCustomer(customer);
+
+        _context.Customers.Add(customer);
+
+        await _context.SaveChangesAsync();
+
+        return customer;
+    }
+
     private static void ValidateCustomer(Customer customer)
     {
         if (string.IsNullOrWhiteSpace(customer.Name))
